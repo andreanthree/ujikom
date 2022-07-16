@@ -19,8 +19,10 @@ Auth::routes(['register' => true, 'reset' => false, 'verify' => false]);
 Route::prefix('/')
     ->get('/', [UserDashboardController::class, 'index'])
  
-    ->middleware(['auth', 'which.home'])
+    ->middleware(['which.home'])
     ->name('user.dashboard');
+    Route::get('/detailartikel/{id}', [UserDashboardController::class, 'detailartikel']);
+    Route::post('/kirimkomen/{id}', [UserDashboardController::class, 'kirimkomen']);
 
     Route::prefix('admin')
     ->middleware(['auth', 'is.admin'])

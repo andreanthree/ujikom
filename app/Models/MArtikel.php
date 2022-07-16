@@ -20,7 +20,7 @@ class MArtikel extends Model
     }
     public function listkomentar()
     {
-        return $this->hasMany(MArtikelKomentar::class, 'id_artikel', 'id_artikel');
+        return $this->hasMany(MArtikelKomentar::class, 'id_artikel', 'id');
     }
 
 }
