@@ -17,7 +17,7 @@
 @endsection 
     
 @section('breadcrumbs')
-  <div class="breadcrumb-item"><a href="{{ route('jadwal.index') }}">Data {{$dataPage['title']}}</a></div>
+  <div class="breadcrumb-item"><a href="#">Data {{$dataPage['title']}}</a></div>
   <div class="breadcrumb-item @if(isset($item)) '' @else 'active' @endif">
     @if(isset($item))
       <a href="#">Edit Data {{$dataPage['title']}}</a>
@@ -52,11 +52,11 @@
     @if(isset($item))
       @slot('form_method', 'POST')
       @slot('method', 'PUT')
-      @slot('form_action', 'jadwal.update')
-      @slot('update_id', $item->kode_jadwal)
+      @slot('form_action', 'artikelpenulis.update')
+      @slot('update_id', $item->id)
     @else 
       @slot('form_method', 'POST')
-      @slot('form_action', 'jadwal.store')
+      @slot('form_action', 'artikelpenulis.store')
     @endif
 
     @slot('is_form_with_file', 'true')

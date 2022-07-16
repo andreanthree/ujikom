@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Writer;
 
 use App\Http\Controllers\Controller;
+use App\Models\MArtikel;
+use App\Models\MArtikelKomentar;
 use App\Models\MWriter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,85 +16,55 @@ class ArtikelWriterController extends Controller
 {
 
     private $dataPage = [
-        'redirectIndex' => "dokter/jadwal",
-        'primaryKey' => "kode_jadwal",
-        'baseview' => "pages.dokter.jadwal.",
-        'title' => "Jadwal",
-        'routejson' => "jadwaljson",
-        'indexnama' => "hari",
+        'redirectIndex' => "penulis/artikelpenulis",
+        'primaryKey' => "id",
+        'baseview' => "pages.penulis.artikel.",
+        'title' => "Artikel Saya",
+        'routejson' => "penulisartikeljson",
+        'indexnama' => "judul_artikel",
         'keyuniq' => "",
         'formData' => [
             [
-                "name" => "hari",
-                "label" => "Hari",
-                "placeholder" => "",
-                "type" => "select",
-                "selectedId" => "select",
-                "data" => [
-                    ['id' => 'Senin','label' => 'Senin'],
-                    ['id' => 'Selasa','label' => 'Selasa'],
-                    ['id' => 'Rabu','label' => 'Rabu'],
-                    ['id' => 'Kamis','label' => 'Kamis'],
-                    ['id' => 'Jumat','label' => 'Jumat'],
-                    ['id' => 'Sabtu','label' => 'Sabtu'],
-                    ['id' => 'Minggu','label' => 'Minggu'],
-                ],
+                "name" => "judul_artikel",
+                "label" => "Judul Artikel",
+                "placeholder" => "Masukkan Judul Artikel",
+                "type" => "text",
                 "form_group_class" => "required",
                 "other_attributes" => "required",
-                "rule" => "required|string",
+                "rule" => "required|string|max:50",
                 "value" => ""
             ],
             [
-                "name" => "status_jadwal",
-                "label" => "Status Jadwal",
-                "placeholder" => "",
-                "type" => "select",
-                "selectedId" => "select",
-                "data" => [
-                    ['id' => 'Aktif','label' => 'Aktif'],
-                    ['id' => 'Non-Aktif','label' => 'Non-Aktif'],
-                ],
-                "form_group_class" => "required",
-                "other_attributes" => "required",
-                "rule" => "required|string",
-                "value" => ""
-            ],
-            [
-                "name" => "mulai",
-                "label" => "Waktu Mulai",
-                "placeholder" => "Pilih Waktu Mulai",
-                "type" => "time",
-                "form_group_class" => "required",
-                "other_attributes" => "required",
-                "rule" => "required",
+                "name" => "isi_artikel",
+                "label" => "Deskripsi",
+                "placeholder" => "Masukkan Deskripsi",
+                "type" => "textarea",
+                "form_group_class" => "required col-md-12",
+                "other_attributes" => "required ",
+                "rule" => "string",
                 "value" => ""
             ],
 
-            [
-                "name" => "selesai",
-                "label" => "Waktu Selesai",
-                "placeholder" => "Pilih Waktu Selesai",
-                "type" => "time",
-                "form_group_class" => "required",
-                "other_attributes" => "required",
-                "rule" => "required|after_or_equal:mulai",
-                "value" => ""
-            ]
         ]
     ];
     public function index()
     {
+        // $getId = MWriter::where('id_user', Auth::user()->id)->first();
+        // $data = MArtikel::where('id_penulis', $getId->id)->with(['penulis'])->get();
+        // return $data;
         return view($this->dataPage['baseview'].'index',[
             'dataPage' => $this->dataPage
         ]);
     }
     public function json()
     {
-        $data = MWriter::where('kode_dokter', Auth::user()->akses_data)->get();
+        $getId = MWriter::where('id_user', Auth::user()->id)->first();
+        $data = MArtikel::where('id_penulis', $getId->id_penulis)->with(['penulis'])->get();
         return DataTables::of($data)
             ->addIndexColumn()
             ->make(true);
     }
+    
     public function create()
     {
         return view($this->dataPage['baseview'].'edit_or_create',[
@@ -107,13 +79,14 @@ class ArtikelWriterController extends Controller
         }
         $request->validate($arrRule);
         $data = $request->all();
+
+        $getId = MWriter::where('id_user', Auth::user()->id)->first();
         unset($data['_method']);
         unset($data['_token']);
-        $data[$this->dataPage['primaryKey']] = Str::random(16);
-        $data['created_at'] = Carbon::now();
-        $data['created_by'] = Auth::user()->id;
-        $data['kode_dokter'] = Auth::user()->akses_data;
-        $create_room = MWriter::create($data);
+        $data['tanggal'] = date('Y-m-d');
+        $data['id_penulis'] = $getId->id_penulis;
+        // return $data;
+        $create_room = MArtikel::create($data);
         
         if($create_room) {
             $request->session()->flash('alert-success', $this->dataPage['title'].' '.$data[$this->dataPage['indexnama']].' berhasil ditambahkan');
@@ -136,7 +109,7 @@ class ArtikelWriterController extends Controller
      */
     public function edit($id)
     {
-        $item = MWriter::where([$this->dataPage['primaryKey']=>$id])->first();
+        $item = MArtikel::where([$this->dataPage['primaryKey']=>$id])->first();
         $dataPage = $this->dataPage;
         $dataPage['formData'][0]['selectedId'] = $item->hari;
         $dataPage['formData'][1]['selectedId'] = $item->status_jadwal;
@@ -148,7 +121,7 @@ class ArtikelWriterController extends Controller
 
     public function update(Request $request, $id)
     {
-        $item = MWriter::where([$this->dataPage['primaryKey']=>$id]);
+        $item = MArtikel::where([$this->dataPage['primaryKey']=>$id]);
         $itemFirst = $item->first()->toArray();
 
         $arrRule = [];
@@ -174,9 +147,10 @@ class ArtikelWriterController extends Controller
     }
     public function destroy(Request $request, $id)
     {
-        $item = MWriter::where([$this->dataPage['primaryKey']=>$id]);
+        $item = MArtikel::where([$this->dataPage['primaryKey']=>$id]);
         $itemFirst = $item->first()->toArray();
         if($item->delete()) {
+            MArtikelKomentar::where('id_artikel',$id)->delete();
             $request->session()->flash('alert-success', $this->dataPage['title'].' '.$itemFirst[$this->dataPage['indexnama']].' berhasil diupdate');
         } else {
             $request->session()->flash('alert-failed', $this->dataPage['title'].' '.$itemFirst[$this->dataPage['indexnama']].' gagal diupdate');

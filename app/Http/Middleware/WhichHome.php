@@ -16,12 +16,10 @@ class WhichHome
      */
     public function handle($request, Closure $next)
     {
-        if(Auth::user() && (Auth::user()->role == 'USER'))
-            return $next($request);
+        if(Auth::user() && (Auth::user()->role == 'PENULIS'))
+            return redirect('/penulis');
         elseif(Auth::user() && (Auth::user()->role == 'ADMIN'))
             return redirect('/admin');
-        elseif(Auth::user() && (Auth::user()->role == 'DOKTER'))
-            return redirect('/dokter');
-        return response('Unauthorized. <a href="javascript:history.back()">Go Back</a>', 401);
+        return $next($request);
     }
 }

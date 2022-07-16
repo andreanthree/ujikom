@@ -19,22 +19,19 @@
 
   @component('components.datatables')
 
-    @slot('buttons')
-      <div class="row">
-      <a href="{{ route('jadwal.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i>&nbsp;Tambah jadwal</a>
-      </div>
-    @endslot
     
-    @slot('table_id', 'jadwal-table')
+    @slot('buttons')
+      <a href="{{ url('penulis/artikelpenulis/create') }}" class="btn btn-primary"><i class="fas fa-plus"></i>&nbsp;Tambah Artikel</a>
+    @endslot
+  
+    @slot('table_id', 'penyakit-table')
 
     @slot('table_header')
       <tr>
         <th>#</th>
-        <th>Hari </th>
-        <th>Waktu Mulai</th>
-        <th>Waktu Selesai</th>
-        <th>Status</th>
-        <th>Dibuat Pada</th>
+        <th>Judul</th>
+        <th>Tanggal</th>
+        <th>Deskripsi</th>
         <th>Aksi</th>
       </tr>
     @endslot
@@ -47,10 +44,10 @@
 
   <script>
   $(document).ready(function() {
-    $('#jadwal-table').DataTable({
+    $('#penyakit-table').DataTable({
       processing: true,
       serverSide: true,
-      ajax: '{{ route("jadwaljsondokter") }}',
+      ajax: '{{ route("artikeljsonwriter") }}',
       order: [1, 'asc'],
       columns: [
       {
@@ -58,27 +55,16 @@
         data: 'DT_RowIndex',
       },
       {
-        name: 'hari',
-        data: 'hari',
+        name: 'judul_artikel',
+        data: 'judul_artikel',
       },
       {
-        name: 'mulai',
-        data: 'mulai',
+        name: 'tanggal',
+        data: 'tanggal',
       },
       {
-        name: 'selesai',
-        data: 'selesai',
-      },
-      {
-        name: 'status_jadwal',
-        data: 'status_jadwal',
-      },
-      {
-        name: 'created_at',
-        data: 'created_at',
-        render: function ( data, type, row ) {
-          return '<p class="">'+parseDatetimeToText(row.created_at)+'</p>';            
-        }
+        name: 'isi_artikel',
+        data: 'isi_artikel',
       },
 
       {
@@ -87,9 +73,9 @@
         orderable: false, 
         searchable: false,
         render: function ( data, type, row ) {
-          var result = '<div class=""> <a href="jadwal/'+row.kode_jadwal+'/edit" class="text-primary">Edit</a>'
+          var result = '<div class=""> <a href="artikelpenulis/'+row.id+'/edit" class="text-primary">Edit</a>'
 
-          result += ' <div class="bullet"></div> <a href="javascript:;" data-id="'+row.kode_jadwal+'" data-title="Hapus" data-body="Yakin ingin menghapus ini?" class="text-danger" id="delete-btn" name="delete-btn">Hapus</a></div>';
+          result += ' <div class="bullet"></div> <a href="javascript:;" data-id="'+row.id+'" data-title="Hapus" data-body="Yakin ingin menghapus ini?" class="text-danger" id="delete-btn" name="delete-btn">Hapus</a></div>';
 
           return result;
             
@@ -106,7 +92,7 @@
 
       $('.modal-title').html(title);
       $('.modal-body').html(body);
-      $('#confirm-form').attr('action', 'jadwal/'+id);
+      $('#confirm-form').attr('action', 'artikelpenulis/'+id);
       $('#confirm-form').attr('method', 'POST');
       $('#submit-btn').attr('class', 'btn btn-danger');
       $('#lara-method').attr('value', 'delete');

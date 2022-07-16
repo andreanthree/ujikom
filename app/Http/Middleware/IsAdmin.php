@@ -18,6 +18,6 @@ class IsAdmin
     {
         if(Auth::user() && (Auth::user()->role == 'ADMIN'))
             return $next($request);
-        return response('Unauthorized. <a href="javascript:history.back()">Go Back</a>', 401);
+        return response('Unauthorized admin. <a href="{{url()}}">Go Back</a>', 401);
     }
 }

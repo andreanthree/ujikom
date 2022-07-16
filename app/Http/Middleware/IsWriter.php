@@ -18,6 +18,6 @@ class IsWriter
     {
         if(Auth::user() && (Auth::user()->role == 'PENULIS'))
             return $next($request);
-        return response('Unauthorized. <a href="javascript:history.back()">Go Back</a>', 401);
+        return response('Unauthorizedss. <a href="{{url()}}">Go Back</a>', 401);
     }
 }

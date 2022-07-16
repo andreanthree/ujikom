@@ -49,6 +49,6 @@ class User extends Authenticatable
 
     public function writer()
     {
-        return $this->belongsTo(MDokter::class, 'id', 'id_penulis');
+        return $this->belongsTo(MWriter::class, 'id', 'id_penulis');
     }
 }

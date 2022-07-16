@@ -41,41 +41,21 @@
       @if (Auth::user()->role == 'PENULIS')
 
         <li class="menu-header">Dashboard</li>
-        <li class="{{ request()->is('dokter') ? 'active' : '' }}">
-          <a class="nav-link" href="{{ route('dokter.dashboard') }}"><i class="fas fa-fire"></i> <span>Dashboard</span></a>
+        <li class="{{ request()->is('penulis') ? 'active' : '' }}">
+          <a class="nav-link" href="{{ url('penulis/') }}"><i class="fas fa-fire"></i> <span>Dashboard</span></a>
         </li>
-        <li class="menu-header">Data Master</li>
-        <li class="{{ request()->is('dokter/penyakit*') ? 'active' : '' }}">
-          <a class="nav-link" href="{{ url('dokter/penyakit') }}">
-            <i class="fas fa-book"></i> <span>Penyakit</span>
+        
+        <li class="menu-header">Data</li>
+        <li class="{{ request()->is('penulis/artikelpenulis*') ? 'active' : '' }}">
+          <a class="nav-link" href="{{ url('penulis/artikelpenulis') }}">
+            <i class="fas fa-book"></i> <span>Artikel Saya</span>
           </a>
         </li>
-        <li class="{{ request()->is('dokter/gejala*') ? 'active' : '' }}">
-          <a class="nav-link" href="{{ route('gejala.index') }}">
-            <i class="fas fa-book"></i> <span>Gejala</span>
+        <li class="{{ request()->is('penulis/komentar*') ? 'active' : '' }}">
+          <a class="nav-link" href="{{ url('penulis/komentar') }}">
+            <i class="fas fa-book"></i> <span>komentar</span>
           </a>
         </li>
-        <li class="{{ request()->is('dokter/analisis*') ? 'active' : '' }}">
-          <a class="nav-link" href="{{ route('analisis.index') }}">
-            <i class="fas fa-book"></i> <span>Analisis</span>
-          </a>
-        </li>
-        <li class="{{ request()->is('dokter/penangananpenyakit*') ? 'active' : '' }}">
-          <a class="nav-link" href="{{ route('penangananpenyakit.index') }}">
-            <i class="fas fa-book"></i> <span>Penanganan Penyakit</span>
-          </a>
-        </li>
-        <li class="{{ request()->is('dokter/saya') ? 'active' : '' }}">
-          <a class="nav-link" href="{{ route('doktersaya') }}">
-            <i class="fas fa-book"></i> <span>Data Saya</span>
-          </a>
-        </li>
-        <li class="{{ request()->is('dokter/jadwal*') ? 'active' : '' }}">
-          <a class="nav-link" href="{{ route('jadwal.index') }}">
-            <i class="fas fa-book"></i> <span>Jadwal Saya</span>
-          </a>
-        </li>
-
       @endif
 
       </ul>

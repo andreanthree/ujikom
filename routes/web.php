@@ -40,7 +40,7 @@ Route::prefix('/')
        
 
     });
-    Route::prefix('writer')
+    Route::prefix('penulis')
         ->middleware(['auth', 'is.writer'])
         ->group(function(){
            
@@ -49,7 +49,7 @@ Route::prefix('/')
             ->name('writer.dashboard');
             Route::get('/artikel/json',[ArtikelWriterController::class,'json'])->name('artikeljsonwriter');
             Route::resources([
-                '/artikel' => ArtikelWriterController::class,
+                '/artikelpenulis' => ArtikelWriterController::class,
             ]);
            
     
