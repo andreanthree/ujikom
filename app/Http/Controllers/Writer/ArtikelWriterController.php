@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Writer;
 use App\Http\Controllers\Controller;
 use App\Models\MArtikel;
 use App\Models\MArtikelKomentar;
+use App\Models\MKomentar;
 use App\Models\MWriter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -65,6 +66,28 @@ class ArtikelWriterController extends Controller
             ->make(true);
     }
     
+    public function getartikelkomen($id)
+    {
+        $data = MArtikelKomentar::where('id_artikel',$id)->with(['artikel','komentar'])->get();
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->make(true);
+    }
+    
+    
+    public function deletekomentar(Request $request, $id, $idartikel)
+    {
+        $item = MArtikelKomentar::where(['id' => $id]);
+        $itemFirst = $item->first()->toArray();
+        MKomentar::where(['id' => $itemFirst['id_komentar']]);
+        if ($item->delete()) {
+            $request->session()->flash('alert-success', 'komentar berhasil dihapus');
+        } else {
+            $request->session()->flash('alert-failed', 'komentar gagal dihapus');
+        }
+
+        return redirect(url($this->dataPage['redirectIndex'].'/'.$idartikel));
+    }
     public function create()
     {
         return view($this->dataPage['baseview'].'edit_or_create',[
@@ -98,7 +121,14 @@ class ArtikelWriterController extends Controller
     }
     public function show($id)
     {
-        //
+
+        $data = MArtikel::where('id', $id)->first();
+        // return $data;
+        
+        return view($this->dataPage['baseview'] . 'detail', [
+            'data' => $data,
+            'dataPage' => $this->dataPage,
+        ]);
     }
 
     /**
@@ -158,5 +188,6 @@ class ArtikelWriterController extends Controller
 
         return redirect(url($this->dataPage['redirectIndex']));
     }
+    
 
 }

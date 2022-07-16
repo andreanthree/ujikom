@@ -48,6 +48,8 @@ Route::prefix('/')
             Route::get('/', [DashboardWriterController::class, 'index'])
             ->name('writer.dashboard');
             Route::get('/artikel/json',[ArtikelWriterController::class,'json'])->name('artikeljsonwriter');
+            Route::get('/komentar/getperartikel/{id}',[ArtikelWriterController::class,'getartikelkomen']);
+            Route::delete('/artikelpenulis/deletekomen/{id}/{idartikel}',[ArtikelWriterController::class,'deletekomentar']);
             Route::resources([
                 '/artikelpenulis' => ArtikelWriterController::class,
             ]);
